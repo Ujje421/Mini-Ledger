@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from sqlmodel import Session, select
+from sqlmodel import Session, select, func
 import json
 
 from database import get_session
@@ -17,20 +17,28 @@ def get_summary(session: Session = Depends(get_session)):
     except Exception:
         pass # Fallback if redis is down
 
-    transactions = session.exec(select(Transaction)).all()
+    total_income = session.exec(
+        select(func.sum(Transaction.amount))
+        .where(Transaction.type == TransactionType.INCOME)
+    ).one() or 0
     
-    total_income = sum(t.amount for t in transactions if t.type == TransactionType.INCOME)
-    total_expense = sum(t.amount for t in transactions if t.type == TransactionType.EXPENSE)
+    total_expense = session.exec(
+        select(func.sum(Transaction.amount))
+        .where(Transaction.type == TransactionType.EXPENSE)
+    ).one() or 0
     
-    spend_by_category = {}
-    for t in transactions:
-        if t.type == TransactionType.EXPENSE:
-            spend_by_category[t.category] = spend_by_category.get(t.category, 0) + t.amount
-            
+    category_totals = session.exec(
+        select(Transaction.category, func.sum(Transaction.amount))
+        .where(Transaction.type == TransactionType.EXPENSE)
+        .group_by(Transaction.category)
+    ).all()
+    
+    spend_by_category = {cat: float(amount) for cat, amount in category_totals}
+    
     summary = {
-        "total_income": total_income,
-        "total_expense": total_expense,
-        "net_balance": total_income - total_expense,
+        "total_income": float(total_income),
+        "total_expense": float(total_expense),
+        "net_balance": float(total_income - total_expense),
         "spend_by_category": spend_by_category
     }
     

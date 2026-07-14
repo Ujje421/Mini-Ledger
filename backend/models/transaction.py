@@ -1,6 +1,7 @@
 from sqlmodel import SQLModel, Field
 from datetime import datetime
 from typing import Optional
+from decimal import Decimal
 from enum import Enum
 
 class TransactionType(str, Enum):
@@ -8,7 +9,7 @@ class TransactionType(str, Enum):
     EXPENSE = "EXPENSE"
 
 class TransactionBase(SQLModel):
-    amount: float
+    amount: Decimal = Field(ge=0, decimal_places=2)
     type: TransactionType
     category: str
     description: Optional[str] = None

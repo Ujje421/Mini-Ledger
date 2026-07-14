@@ -1,46 +1,60 @@
-# Smart Mini-Ledger
+# Smart Mini-Ledger (ByteX Fresher Challenge)
 
-## 1. Overview
-Smart Mini-Ledger is a lightweight, full-stack personal finance application. It allows users to add, view, and categorize transactions (income/expense), and view a summarized financial dashboard. It also features a unique "Ask Your Ledger" AI assistant that lets users query their own transaction data using natural language, backed by Gemini.
+## Application: Junior Full Stack Engineer
 
-## 2. Architecture
-- **Frontend**: Next.js 14 (App Router), React, Tailwind CSS, Lucide Icons, Axios.
-- **Backend**: Python FastAPI, SQLModel.
-- **Database**: PostgreSQL for persistent transaction storage.
-- **Cache**: Redis for caching the summary dashboard endpoint.
-- **AI Integration**: Google Gemini API via `google-generativeai` SDK.
-- **Infrastructure**: Docker & `docker-compose` for orchestration.
+Welcome to my submission for the ByteX Fresher Challenge! This is a full-stack, lightweight personal finance ledger built to demonstrate strong engineering fundamentals, cloud-native architecture, and effective human-AI collaboration.
 
-## 3. Setup instructions
-1. Clone the repository and navigate to the root directory.
-2. Create a `.env` file in the root based on `.env.example`:
-   ```bash
-   GEMINI_API_KEY=your_gemini_api_key_here
-   ```
-3. Run the application using Docker Compose:
-   ```bash
-   docker-compose up --build
-   ```
-4. Access the frontend at `http://localhost:3000` and the backend API docs at `http://localhost:8000/docs`.
+### 🌟 The Unique Twist: "Ask Your Ledger"
+While a standard CRUD ledger is great, I wanted to build something that genuinely helps users understand their finances. 
 
-## 4. AI Tools Used
-- **Antigravity (Gemini 3.1 Pro)** was used extensively to scaffold the project structure.
-- **Code Generation**: I used the AI to rapidly generate the Next.js component shells (`Sidebar`, `SummaryCards`, `TransactionList`, `AskLedgerPanel`), complete with Tailwind classes for styling that match the provided reference aesthetic (slate and blue accents).
-- **Backend Logic**: The AI scaffolded the FastAPI routing, SQLModel definitions, and Redis caching logic.
+I integrated the **Gemini 2.5 AI Model** directly into the frontend as a conversational interface. Users can ask questions like *"What was my biggest expense this month?"* or *"How much did I spend on food?"*. 
+To make this performant and keep API costs low, I implemented **Redis caching** for the dashboard summaries, ensuring the DB isn't hammered on every page load.
 
-## 5. Where AI Fell Short
-- **Naive RAG Prompting**: Initially, the AI's default approach to "Ask Your Ledger" might be to just dump the entire `transactions` table directly into the context window. I had to explicitly structure the backend to fetch only the necessary columns (formatting them concisely as a JSON list of objects without unnecessary ORM metadata) to prevent token limits from being hit as the dataset grows.
-- **Database Initialization**: The AI suggested using `SQLModel.metadata.create_all(engine)` on startup. While acceptable for a small prototype, it skips proper migration tracking (Alembic). I had to accept this trade-off for speed but noted it as a limitation compared to a production environment.
-- **Error Handling**: The AI often wrote happy-path code (e.g., assuming Redis is always available). I added `try-except` blocks around Redis caching to ensure the dashboard still loads if the Redis container fails.
-- **CLI Commands in Windows**: When asked to create directories, the AI used Linux-style `mkdir a b` which failed in Windows PowerShell. It had to fallback to using its file-writing tools directly to create the component directories.
+---
 
-## 6. The Unique Twist: "Ask Your Ledger"
-Instead of a generic AI chatbot, this application implements a scoped RAG (Retrieval-Augmented Generation) pattern. When a user asks a question, the backend retrieves their actual transaction history, formats it compactly, and sends it to the Gemini API as context. 
+### 🤖 AI-Driven Engineering (The Co-Pilot Experience)
 
-Crucially, the UI displays both the natural language answer **and the raw data** (the underlying numbers) used to generate that answer. This grounds the response and mitigates hallucination risk, which is absolutely critical for financial data where users must be able to verify the AI's math.
+For this project, I heavily utilized **AI (via Antigravity IDE)** as my co-pilot. 
 
-## 7. What I'd Do With More Time
-1. **Proper Authentication**: Implement NextAuth.js and JWTs to support multiple users with isolated ledgers.
-2. **Robust Migrations**: Set up Alembic properly to handle schema evolutions over time instead of creating tables on startup.
-3. **Advanced RAG filtering**: Instead of dumping all transactions into the prompt, implement an LLM-driven query planner that extracts date ranges and categories from the user's question, uses those to query Postgres, and *then* feeds the reduced subset to the final generation prompt.
-4. **Pagination**: Implement cursor-based pagination for the transactions list and summary caching strategies that invalidate only specific user keys.
+#### How AI Accelerated My Work:
+- **Rapid Scaffolding:** I used AI to instantly generate the Next.js `package.json`, Tailwind configuration, and FastAPI `Dockerfile` / `docker-compose.yml`. What usually takes an hour of wiring took less than 5 minutes.
+- **UI Prototyping:** I provided a UI mockup image to the AI, and it rapidly converted the design into Tailwind CSS utility classes, allowing me to focus on state management instead of CSS grids.
+
+#### Where AI Fell Short & How Human Judgment Fixed It:
+While the AI was incredibly fast at writing boilerplate, it made several classic "junior" mistakes that would cause catastrophic failures in a production FinTech environment. Here is how my engineering judgment corrected the AI's output:
+
+1. **Floating-Point Financial Errors:**
+   * **AI Output:** Defined the transaction amount as a `float` in the SQLModel/Pydantic schema.
+   * **My Fix:** In finance, `float` causes precision loss (e.g., `0.1 + 0.2 = 0.30000000000000004`). I refactored the models to use Python's `Decimal` type mapped to PostgreSQL's `NUMERIC(10,2)`.
+
+2. **OOM Scaling Bottlenecks (Python vs SQL):**
+   * **AI Output:** For the dashboard summary, the AI wrote a query to fetch *every single transaction* into Python memory using `.all()` and then used a Python loop to calculate the sums. 
+   * **My Fix:** This would cause Out-Of-Memory (OOM) crashes as user data grew. I pushed the computation down to the database layer, rewriting the endpoint to use proper `func.sum()` SQL aggregations.
+
+3. **Unhandled Infrastructure Failures:**
+   * **AI Output:** Implemented Redis caching, but simply wrote `redis_client.delete("summary")` when a new transaction was added. 
+   * **My Fix:** If the Redis container goes down, this would throw a fatal 500 error, preventing users from saving transactions! I added a try-except block to gracefully catch `redis.exceptions.RedisError`, allowing the core ledger to function even if the caching layer is degraded.
+
+4. **Docker Module Import Crashes:**
+   * **AI Output:** Used relative imports (`from .database import engine`) in the backend `main.py` entry point, which caused the FastAPI Docker container to crash on startup.
+   * **My Fix:** I debugged the container logs, identified the `ImportError`, and refactored the codebase to use absolute module imports compliant with Uvicorn's execution context.
+
+---
+
+### 🛠️ Tech Stack
+- **Frontend:** Next.js 14, React (TypeScript), Tailwind CSS
+- **Backend:** Python (FastAPI), SQLModel, Pydantic
+- **Database:** PostgreSQL (Primary), Redis (Caching)
+- **Infrastructure:** Docker & Docker Compose
+- **AI:** Google Gemini 2.5 Flash
+
+### 🚀 Running the Project
+```bash
+# Set your API Key
+echo "GEMINI_API_KEY=your_key_here" > .env
+
+# Spin up Postgres, Redis, FastAPI, and Next.js
+docker-compose up -d --build
+```
+- **Dashboard:** `http://localhost:3000`
+- **API Docs:** `http://localhost:8000/docs`
