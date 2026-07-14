@@ -11,6 +11,15 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        nexus: {
+          bg: "#F4F7F9",
+          card: "#FFFFFF",
+          border: "#E9ECEF",
+          text: "#2B313B",
+          textMuted: "#858C96",
+          primary: "#4F46E5",
+          primaryLight: "#EEF2FF",
+        }
       },
     },
   },
