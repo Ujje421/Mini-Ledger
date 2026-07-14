@@ -46,7 +46,7 @@ def ask_ledger(request: AskRequest, session: Session = Depends(get_session)):
             "date": t.date.strftime("%Y-%m-%d"),
             "type": t.type.value,
             "category": t.category,
-            "amount": t.amount
+            "amount": float(t.amount)
         })
         
     prompt = f"""
