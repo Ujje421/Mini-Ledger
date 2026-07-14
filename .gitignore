@@ -1,0 +1,25 @@
+# Environments
+.env
+.env.local
+.env.*.local
+
+# Next.js
+frontend/.next/
+frontend/out/
+frontend/node_modules/
+frontend/.vercel/
+
+# Python
+backend/__pycache__/
+backend/*.py[cod]
+backend/*$py.class
+backend/.pytest_cache/
+backend/venv/
+backend/env/
+
+# IDEs
+.vscode/
+.idea/
+
+# Docker
+docker-compose.override.yml
