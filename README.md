@@ -58,3 +58,29 @@ docker-compose up -d --build
 ```
 - **Dashboard:** `http://localhost:3000`
 - **API Docs:** `http://localhost:8000/docs`
+
+---
+
+### 🗺️ Production Roadmap (Phases)
+
+While this submission represents a robust MVP for the Fresher Challenge, my vision for "Smart Mini-Ledger" extends to a fully production-grade application. Here is my phased roadmap for scaling this project:
+
+#### Phase 1: Authentication & Multi-Tenancy (Next 30 Days)
+- Integrate **NextAuth.js** (or Clerk) for secure user authentication (OAuth, Magic Links).
+- Update the database schema to include `user_id` on all transactions and implement Row-Level Security (RLS) in PostgreSQL.
+- Personalize the dashboard and AI context to specific user profiles.
+
+#### Phase 2: Advanced Data & Reporting (Month 2)
+- Implement robust pagination and infinite scrolling for the transaction list.
+- Add CSV/PDF export functionality via a background worker queue (e.g., Celery + Redis).
+- Introduce an auto-categorization engine (machine learning categorization of raw bank descriptions).
+
+#### Phase 3: Infrastructure & CI/CD (Month 3)
+- Migrate from Docker Compose to **Kubernetes** for auto-scaling and high availability.
+- Set up **GitHub Actions** for automated CI/CD pipelines (running PyTest, Jest, linting, and building container images).
+- Implement comprehensive monitoring and alerting using **Prometheus** and **Grafana**.
+
+#### Phase 4: Enterprise Polish (Month 4+)
+- Add comprehensive end-to-end (E2E) testing with **Playwright**.
+- Implement rate-limiting on the FastAPI backend to protect against abuse.
+- Set up **Sentry** for API error tracking and **LogRocket** for frontend user session recording.

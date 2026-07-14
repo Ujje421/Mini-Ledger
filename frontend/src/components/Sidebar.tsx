@@ -13,7 +13,16 @@ import Image from 'next/image'
 export default function Sidebar() {
   const pathname = usePathname()
 
-  const sections = [
+  type NavItem = {
+    name: string
+    href: string
+    icon: any
+    badge?: string
+    disabled?: boolean
+    tag?: string
+  }
+
+  const sections: { title: string; items: NavItem[] }[] = [
     {
       title: 'GENERAL',
       items: [
@@ -39,7 +48,7 @@ export default function Sidebar() {
   ]
 
   return (
-    <div className="w-[260px] bg-nexus-bg border-r border-nexus-border/50 h-full flex flex-col shrink-0">
+    <div className="hidden md:flex w-[260px] bg-nexus-bg border-r border-nexus-border/50 sticky top-0 h-screen flex-col shrink-0">
       
       {/* Brand */}
       <div className="h-[72px] px-6 flex items-center justify-between shrink-0">
