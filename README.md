@@ -5,6 +5,8 @@
 Welcome to my submission for the **Junior Full Stack Engineer** role at Bytex. This is a full-stack, lightweight personal finance ledger built to demonstrate strong engineering fundamentals, structured coding, and effective human-AI collaboration.
 
 ---
+Frontend - 
+<img width="1897" height="852" alt="image" src="https://github.com/user-attachments/assets/dbe9d328-da51-49d2-94eb-e183623269f5" />
 
 ## 🌟 The Unique Twists
 While a standard CRUD ledger is great, I wanted to build features that showcase a deeper understanding of product engineering:
