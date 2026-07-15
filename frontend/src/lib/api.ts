@@ -1,5 +1,14 @@
 import axios from 'axios';
 
+export interface Settings {
+  first_name: string;
+  last_name: string;
+  profession: string;
+  email: string;
+  base_currency: string;
+  timezone: string;
+}
+
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
 });

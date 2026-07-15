@@ -13,7 +13,10 @@ export default function AutomationPage() {
         </button>
       </header>
 
-      <div className="bg-nexus-card border border-nexus-border rounded-xl shadow-sm overflow-hidden mb-8">
+      <div className="bg-nexus-card border border-nexus-border rounded-xl shadow-sm overflow-hidden mb-8 relative group cursor-pointer">
+        <div className="absolute inset-0 bg-slate-900/80 z-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+          <span className="text-white font-bold tracking-wider uppercase text-lg">Pro Feature - Coming Soon</span>
+        </div>
         <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center">
@@ -52,7 +55,10 @@ export default function AutomationPage() {
         </div>
       </div>
       
-      <div className="bg-nexus-card border border-nexus-border rounded-xl shadow-sm overflow-hidden opacity-60">
+      <div className="bg-nexus-card border border-nexus-border rounded-xl shadow-sm overflow-hidden opacity-60 relative group cursor-pointer">
+        <div className="absolute inset-0 bg-slate-900/80 z-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+          <span className="text-white font-bold tracking-wider uppercase text-lg">Pro Feature - Coming Soon</span>
+        </div>
         <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center">

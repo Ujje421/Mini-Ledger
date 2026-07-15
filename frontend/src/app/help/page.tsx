@@ -10,26 +10,35 @@ export default function HelpPage() {
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white border border-indigo-100 rounded-xl p-6 shadow-sm flex flex-col items-center text-center group cursor-pointer hover:border-indigo-300 transition-colors">
-          <div className="w-12 h-12 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+        <div className="bg-white border border-indigo-100 rounded-xl p-6 shadow-sm flex flex-col items-center text-center group relative overflow-hidden cursor-pointer hover:border-indigo-300 transition-colors">
+          <div className="absolute inset-0 bg-slate-900/80 z-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+            <span className="text-white font-bold tracking-wider uppercase text-xs">Coming Soon</span>
+          </div>
+          <div className="w-12 h-12 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform relative z-10">
             <BookOpen className="w-6 h-6" />
           </div>
-          <h2 className="text-sm font-bold text-slate-800 mb-1">Documentation</h2>
-          <p className="text-xs text-slate-500">Read our detailed guides</p>
+          <h2 className="text-sm font-bold text-slate-800 mb-1 relative z-10">Documentation</h2>
+          <p className="text-xs text-slate-500 relative z-10">Read our detailed guides</p>
         </div>
-        <div className="bg-white border border-indigo-100 rounded-xl p-6 shadow-sm flex flex-col items-center text-center group cursor-pointer hover:border-indigo-300 transition-colors">
-          <div className="w-12 h-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+        <div className="bg-white border border-indigo-100 rounded-xl p-6 shadow-sm flex flex-col items-center text-center group relative overflow-hidden cursor-pointer hover:border-indigo-300 transition-colors">
+          <div className="absolute inset-0 bg-slate-900/80 z-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+            <span className="text-white font-bold tracking-wider uppercase text-xs">Coming Soon</span>
+          </div>
+          <div className="w-12 h-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform relative z-10">
             <MessageSquare className="w-6 h-6" />
           </div>
-          <h2 className="text-sm font-bold text-slate-800 mb-1">Community Forum</h2>
-          <p className="text-xs text-slate-500">Connect with other users</p>
+          <h2 className="text-sm font-bold text-slate-800 mb-1 relative z-10">Community Forum</h2>
+          <p className="text-xs text-slate-500 relative z-10">Connect with other users</p>
         </div>
-        <div className="bg-white border border-indigo-100 rounded-xl p-6 shadow-sm flex flex-col items-center text-center group cursor-pointer hover:border-indigo-300 transition-colors">
-          <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+        <div className="bg-white border border-indigo-100 rounded-xl p-6 shadow-sm flex flex-col items-center text-center group relative overflow-hidden cursor-pointer hover:border-indigo-300 transition-colors">
+          <div className="absolute inset-0 bg-slate-900/80 z-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+            <span className="text-white font-bold tracking-wider uppercase text-xs">Coming Soon</span>
+          </div>
+          <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform relative z-10">
             <Mail className="w-6 h-6" />
           </div>
-          <h2 className="text-sm font-bold text-slate-800 mb-1">Contact Us</h2>
-          <p className="text-xs text-slate-500">Get help from our team</p>
+          <h2 className="text-sm font-bold text-slate-800 mb-1 relative z-10">Contact Us</h2>
+          <p className="text-xs text-slate-500 relative z-10">Get help from our team</p>
         </div>
       </div>
 

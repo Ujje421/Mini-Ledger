@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import api, { Transaction } from './api';
+import api, { Transaction, Settings } from './api';
 import { useFilters } from './FilterContext';
 
 const fetcher = (url: string) => api.get(url).then(res => res.data);
@@ -43,6 +43,16 @@ export function useSummary() {
   const { data, error, isLoading, mutate } = useSWR('/summary', fetcher);
   return {
     summary: data,
+    isLoading,
+    isError: error,
+    mutate
+  };
+}
+
+export function useSettings() {
+  const { data, error, isLoading, mutate } = useSWR<Settings>('/settings', fetcher);
+  return {
+    settings: data,
     isLoading,
     isError: error,
     mutate

@@ -3,7 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import SQLModel
 
 from database import engine
-from api import transactions, summary, ask
+from api import transactions, summary, ask, settings
+import models.settings # Ensure table is created
 
 app = FastAPI(title="Smart Mini-Ledger")
 
@@ -22,6 +23,7 @@ def on_startup():
 app.include_router(transactions.router)
 app.include_router(summary.router)
 app.include_router(ask.router)
+app.include_router(settings.router)
 
 @app.get("/")
 def read_root():
