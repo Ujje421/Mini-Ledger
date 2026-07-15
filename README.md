@@ -39,6 +39,10 @@ While the AI was incredibly fast at writing boilerplate, it made several classic
    * **AI Output:** Used relative imports (`from .database import engine`) in the backend `main.py` entry point, which caused the FastAPI Docker container to crash on startup.
    * **My Fix:** I debugged the container logs, identified the `ImportError`, and refactored the codebase to use absolute module imports compliant with Uvicorn's execution context.
 
+5. **Clunky Frontend State & API Spam:**
+   * **AI Output:** The AI used standard `useEffect` hooks in every single component (`DashboardCharts`, `SummaryCards`, `TransactionList`) to fetch data. This caused the UI to flicker with loading states on every route change and spammed the backend with redundant API calls.
+   * **My Fix:** I architected a global frontend caching layer using **SWR** (Stale-While-Revalidate). Now, page transitions are instant as they serve from memory cache, while background revalidation ensures data freshness. Adding a new transaction globally mutates the cache without requiring a hard refresh!
+
 ---
 
 ### 🛠️ Tech Stack

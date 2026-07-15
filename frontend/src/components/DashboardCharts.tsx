@@ -2,34 +2,18 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { Filter, ArrowUpDown, MoreHorizontal, ArrowUpRight, Users, ChevronDown, AlertCircle } from 'lucide-react'
-import { fetchTransactions, Transaction, fetchSummary } from '@/lib/api'
 import { parseISO, format, subDays, startOfDay, isAfter } from 'date-fns'
+import { useTransactions, useSummary } from '@/lib/hooks'
 
 export function SalesOverviewChart() {
-  const [transactions, setTransactions] = useState<Transaction[]>([])
-  const [totalExpense, setTotalExpense] = useState(0)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const [txs, summary] = await Promise.all([
-          fetchTransactions(),
-          fetchSummary()
-        ])
-        setTransactions(txs)
-        setTotalExpense(summary.total_expense || 0)
-      } catch (err) {
-        console.error("Chart data error", err)
-      } finally {
-        setLoading(false)
-      }
-    }
-    loadData()
-  }, [])
+  const { transactions, isLoading: txLoading } = useTransactions()
+  const { summary, isLoading: sumLoading } = useSummary()
+  
+  const totalExpense = summary?.total_expense || 0
+  const loading = txLoading || sumLoading
 
   const chartData = useMemo(() => {
-    if (!transactions.length) return null
+    if (!transactions || !transactions.length) return null
     
     const today = new Date()
     const monthsData = [
@@ -167,25 +151,10 @@ export function SalesOverviewChart() {
 }
 
 export function TotalSubscriberChart() {
-  const [transactions, setTransactions] = useState<Transaction[]>([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const txs = await fetchTransactions()
-        setTransactions(txs)
-      } catch (err) {
-        console.error("Chart data error", err)
-      } finally {
-        setLoading(false)
-      }
-    }
-    loadData()
-  }, [])
+  const { transactions, isLoading } = useTransactions()
 
   const weekData = useMemo(() => {
-    if (!transactions.length) return null
+    if (!transactions || !transactions.length) return null
     
     const days: { day: string; date: Date; count: number }[] = []
     const today = startOfDay(new Date())
@@ -226,7 +195,7 @@ export function TotalSubscriberChart() {
     }
   }, [transactions])
 
-  if (loading) {
+  if (isLoading) {
     return <div className="p-6 h-full flex items-center justify-center text-nexus-textMuted animate-pulse">Loading chart data...</div>
   }
 
@@ -239,7 +208,7 @@ export function TotalSubscriberChart() {
             <h3 className="text-sm font-medium text-nexus-text">Total Transactions</h3>
           </div>
           <div className="flex items-baseline gap-3">
-            <span className="text-[28px] font-bold text-nexus-text tracking-tight">{transactions.length}</span>
+            <span className="text-[28px] font-bold text-nexus-text tracking-tight">{transactions?.length || 0}</span>
           </div>
           <div className="flex items-center gap-2 mt-1">
             <span className="text-[11px] text-nexus-textMuted font-medium">All Time Volume</span>

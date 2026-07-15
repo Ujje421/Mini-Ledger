@@ -1,27 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { fetchSummary } from '@/lib/api'
+import { useSummary } from '@/lib/hooks'
 import { Eye, FileText, Info, Target, ArrowUpRight, ArrowDownRight } from 'lucide-react'
 
 export default function SummaryCards() {
-  const [summary, setSummary] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    loadSummary()
-  }, [])
-
-  const loadSummary = async () => {
-    try {
-      const data = await fetchSummary()
-      setSummary(data)
-    } catch (error) {
-      console.error('Failed to load summary', error)
-    } finally {
-      setLoading(false)
-    }
-  }
+  const { summary, isLoading: loading } = useSummary()
 
   if (loading) {
     return <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-pulse">

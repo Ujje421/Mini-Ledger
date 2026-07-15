@@ -1,32 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { fetchTransactions, Transaction } from '@/lib/api'
+import { useTransactions } from '@/lib/hooks'
 import { format, parseISO } from 'date-fns'
 import { MoreHorizontal, AlertCircle } from 'lucide-react'
 
 export default function TransactionList() {
-  const [transactions, setTransactions] = useState<Transaction[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const { transactions, isLoading: loading, isError, mutate } = useTransactions()
+  const error = isError ? "We're having trouble retrieving your transactions right now. Please try again in a moment." : null
 
-  useEffect(() => {
-    loadTransactions()
-  }, [])
-
-  const loadTransactions = async () => {
-    try {
-      setError(null)
-      const data = await fetchTransactions()
-      setTransactions(data)
-    } catch (err: any) {
-      console.error('Failed to load transactions', err)
-      // Refined error handling as requested
-      setError("We're having trouble retrieving your transactions right now. Please try again in a moment.")
-    } finally {
-      setLoading(false)
-    }
-  }
+  const loadTransactions = () => mutate()
 
   // Helper to generate a consistent color and initial based on category string
   const getIconData = (category: string) => {
@@ -81,7 +63,7 @@ export default function TransactionList() {
             </tr>
           </thead>
           <tbody className="divide-y divide-nexus-border/50">
-            {transactions.length === 0 ? (
+            {!transactions || transactions.length === 0 ? (
               <tr>
                 <td colSpan={5} className="px-6 py-12 text-center">
                   <div className="text-nexus-textMuted text-sm font-medium">No transactions found.</div>
