@@ -1,8 +1,9 @@
 'use client'
 
 import { useTransactions } from '@/lib/hooks'
+import { deleteTransaction } from '@/lib/api'
 import { format, parseISO } from 'date-fns'
-import { MoreHorizontal, AlertCircle } from 'lucide-react'
+import { MoreHorizontal, AlertCircle, Trash2 } from 'lucide-react'
 
 export default function TransactionList() {
   const { transactions, isLoading: loading, isError, mutate } = useTransactions()
@@ -52,7 +53,7 @@ export default function TransactionList() {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full text-sm text-left">
+        <table className="w-full min-w-[500px] text-sm text-left">
           <thead>
             <tr>
               <th className="px-6 py-4 w-12"><input type="checkbox" className="rounded border-slate-300 text-nexus-primary focus:ring-nexus-primary" /></th>
@@ -105,10 +106,24 @@ export default function TransactionList() {
                       </div>
                     </td>
                     <td className="px-6 py-3 text-right">
-                       <div className="flex items-center justify-end gap-2">
+                       <div className="flex items-center justify-end gap-3">
                           <span className={`font-semibold ${t.type === 'INCOME' ? 'text-nexus-text' : 'text-nexus-text'}`}>
                             {t.type === 'INCOME' ? '+' : '-'}${Number(t.amount).toFixed(2)}
                           </span>
+                          <button 
+                            onClick={async () => {
+                              try {
+                                await deleteTransaction(t.id);
+                                mutate();
+                              } catch (e) {
+                                console.error('Failed to delete transaction', e);
+                              }
+                            }}
+                            className="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-md transition-colors opacity-0 group-hover:opacity-100"
+                            title="Delete transaction"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
                        </div>
                     </td>
                   </tr>

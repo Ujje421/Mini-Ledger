@@ -10,7 +10,12 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 
-export default function Sidebar() {
+interface SidebarProps {
+  mobileOpen: boolean;
+  setMobileOpen: (open: boolean) => void;
+}
+
+export default function Sidebar({ mobileOpen, setMobileOpen }: SidebarProps) {
   const pathname = usePathname()
 
   type NavItem = {
@@ -34,29 +39,41 @@ export default function Sidebar() {
     {
       title: 'TOOLS',
       items: [
-        { name: 'Analytics', href: '#', icon: BarChart2, disabled: true },
-        { name: 'Automation', href: '#', icon: Workflow, disabled: true, tag: 'BETA' },
+        { name: 'Analytics', href: '/analytics', icon: BarChart2 },
+        { name: 'Automation', href: '/automation', icon: Workflow, tag: 'BETA' },
       ]
     },
     {
       title: 'SUPPORT',
       items: [
-        { name: 'Settings', href: '#', icon: Settings, disabled: true },
-        { name: 'Help', href: '#', icon: HelpCircle, disabled: true },
+        { name: 'Settings', href: '/settings', icon: Settings },
+        { name: 'Help', href: '/help', icon: HelpCircle },
       ]
     }
   ]
 
   return (
-    <div className="hidden md:flex w-[260px] bg-nexus-bg border-r border-nexus-border/50 sticky top-0 h-screen flex-col shrink-0">
+    <>
+      {/* Mobile Overlay */}
+      {mobileOpen && (
+        <div 
+          className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
       
+      {/* Sidebar Container */}
+      <div className={`fixed inset-y-0 left-0 z-50 w-[260px] bg-nexus-bg border-r border-nexus-border/50 flex flex-col shrink-0 transition-transform duration-300 md:relative md:translate-x-0 ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
       {/* Brand */}
       <div className="h-[72px] px-6 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
           <Image src="/logo.svg" alt="Mini Ledger" width={28} height={28} />
           <span className="font-bold text-nexus-text text-xl tracking-tight">Mini Ledger</span>
         </div>
-        <button className="w-8 h-8 rounded-md border border-nexus-border flex items-center justify-center text-nexus-textMuted hover:bg-slate-100 transition-colors">
+        <button 
+          onClick={() => setMobileOpen(false)}
+          className="w-8 h-8 rounded-md border border-nexus-border flex items-center justify-center text-nexus-textMuted hover:bg-slate-100 transition-colors md:hidden"
+        >
           <ChevronLeft className="w-4 h-4" />
         </button>
       </div>
@@ -80,7 +97,10 @@ export default function Sidebar() {
                         ? 'bg-nexus-card text-nexus-text shadow-sm border border-nexus-border/50 font-medium' 
                         : 'text-nexus-textMuted hover:bg-slate-100 hover:text-nexus-text'
                     } ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
-                    onClick={(e) => item.disabled && e.preventDefault()}
+                    onClick={(e) => {
+                      if (item.disabled) e.preventDefault();
+                      else setMobileOpen(false);
+                    }}
                   >
                     <div className="flex items-center gap-3">
                       <item.icon className={`w-4 h-4 ${isActive ? 'text-nexus-primary' : 'text-nexus-textMuted'}`} />
@@ -128,6 +148,7 @@ export default function Sidebar() {
         </div>
       </div>
       
-    </div>
+      </div>
+    </>
   )
 }

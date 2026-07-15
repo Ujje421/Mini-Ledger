@@ -23,6 +23,11 @@ export const createTransaction = async (transaction: Omit<Transaction, 'id'>) =>
   return data;
 };
 
+export const deleteTransaction = async (id: number) => {
+  const { data } = await api.delete(`/transactions/${id}`);
+  return data;
+};
+
 export const fetchSummary = async () => {
   const { data } = await api.get('/summary');
   return data;
